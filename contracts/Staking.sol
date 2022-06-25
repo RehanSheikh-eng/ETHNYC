@@ -2,7 +2,10 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "../interfaces/IVault.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "../interfaces/IStMatic.sol";
+import "../interfaces/IAPIConsumer.sol";
+import "../interfaces/IStMatic.sol";
 import "./Testable.sol";
 
 
@@ -10,17 +13,19 @@ import "./Testable.sol";
  * @title Stake money for your objectives
  * @dev This allows you to stake money for your objectives
  */
-contract Staking {
+contract Staking is Ownable{
 
 
     address payable owner;
     uint256 MAX_INT = 2**256 - 1;
-    address MATIC = 0x51998830821827e12044a903e524b163152eFFd4;
-    IVault yDai = IVault(0xF4869878d11145D65136A7e3c8CA36a5A5059dFa);
+    IStMatic stMatic;
+    ERC20 matic;
+    IAPIConsumer internal apiConsumer;
 
-    ERC20 dai = ERC20(DAI);
+    // UINT to track stMatic in pool
+    uint256 public communityPool;
 
-    struct UserInformation {
+    struct userInformation {
         string vehicleRegistration;
         uint256 deadline;
         uint256 stakedAmount;
@@ -28,37 +33,80 @@ contract Staking {
         uint256 carbonTax;
     }
 
-    mapping(address => UserGoals) private userGoals;
-    uint256 public communityPool;
 
-    constructor() {
-        owner = payable(msg.sender);
+    // Mapping from user wallet address to submitted information
+    mapping(address => userInformation) private addressToInfo;
+
+    modifier onlyAPIConsumer(){
+
+        require(
+            msg.sender == address(apiConsumer)
+        ); // dev: Only VRFConsuemr contract can call this function
+
+        _;
     }
 
-    function stake(uint256 _deadline, uint256 _amount, string _vehicleRegistration) public {
+    constructor(address _maticAddress, address _stMaticAddress, address _IAPIConsumer) {
+        owner = payable(msg.sender);
+        matic = ERC20(_maticAddress);
+        stMatic = IStMatic(_stMaticAddress);
+        apiConsumer = IAPIConsumer(_IAPIConsumer);
+    }
+
+    function initialize(address _APIConsumer) public onlyOwner(){
+
+        require(_APIConsumer != address(0x0)); // dev: APIConsumer address must be defined
+
+        // Create APIConsumer contract instance
+        apiConsumer = IAPIConsumer(_APIConsumer);
+    }
+    
+    function stake(uint256 _amount) public {
+
+        // Mandatory checks of input data
         require(amount >= 1, "Need to transfer at least 1");
         require(userGoals[msg.sender].stakedAmount == 0, "User already has set up a plan");
         require(block.timestamp < deadline, "Deadline must be set in the future");
 
-        dai.transferFrom(msg.sender, address(this), amount);
+        // Transfer matic from the message sender to this contract
+        matic.transferFrom(msg.sender, address(this), amount);
 
-        dai.approve(address(yDai), MAX_INT);
-        uint256 deposited = yDai.deposit(amount);
+        // Approve the staking contract's use of this contracts matic
+        matic.approve(address(stMatic), MAX_INT);
 
-        userGoals[msg.sender] = UserGoals(deadline, amount, deposited);
-        totalPool += amount;
+        // Stake matic with LIDO
+        uint256 deposited = stMatic.submit(_amount);
+
+        // Calculate deadline date
+        uint256 deadline = block.timestamp + 52 weeks;
+
+        // append info to mapping
+        addressToInfo[msg.sender] = userInformation(0, deadline, _amount, deposited, 0);
+
+        // Incerement pool amount
+        communityPool += amount;
     }
 
-    function withdraw(address target) public {
-        require(userGoals[target].stakedAmount > 0, "User doesn't have a plan");
-        require(block.timestamp > userGoals[target].deadline, "Deadline hasn't been achieved");
+    function withdraw(string _vehicleRegistration) public {
+
+        require(addressToInfo[msg.sender].stakedAmount > 0, "User doesn't have a plan");
+        require(block.timestamp > addressToInfo[msg.sender].deadline, "Deadline hasn't been achieved");
+
+        // Reqeust CO2 data from API
+        requestId = apiConsumer.requestLatestC02Data(_vehicleRegistration);
+
         uint stakedAmount = userGoals[target].stakedAmount;
         uint shares = userGoals[target].shares;
 
         uint256 stakedPlusInterests = yDai.withdraw(shares);
 
-        totalPool -= stakedAmount;
+        communityPool -= stakedAmount ;
         userGoals[target] = UserGoals(0, 0, 0);
-        dai.transfer(target, stakedPlusInterests);
+        matic.transfer(msg.sender, stakedPlusInterests);
+    }
+
+    function fufillData(uint256 _C02, bytes32 _requestId) external onlyAPIConsumer(){
+
+
     }
 }
