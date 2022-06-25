@@ -3,6 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "../interfaces/IStMatic.sol";
 import "../interfaces/IAPIConsumer.sol";
 import "../interfaces/IStMatic.sol";
@@ -18,6 +19,8 @@ contract Staking is Ownable{
 
     address payable owner;
     uint256 MAX_INT = 2**256 - 1;
+
+    // Contract Interfaces
     IStMatic stMatic;
     ERC20 matic;
     IAPIConsumer internal apiConsumer;
@@ -36,6 +39,9 @@ contract Staking is Ownable{
 
     // Mapping from user wallet address to submitted information
     mapping(address => userInformation) private addressToInfo;
+    
+    // Keep track of API requests
+    mapping(bytes32 => address) private addressToRequestID;
 
     modifier onlyAPIConsumer(){
 
@@ -60,7 +66,7 @@ contract Staking is Ownable{
         // Create APIConsumer contract instance
         apiConsumer = IAPIConsumer(_APIConsumer);
     }
-    
+
     function stake(uint256 _amount) public {
 
         // Mandatory checks of input data
@@ -87,13 +93,16 @@ contract Staking is Ownable{
         communityPool += amount;
     }
 
-    function withdraw(string _vehicleRegistration) public {
+    function initWithdraw(string _vehicleRegistration) public {
 
         require(addressToInfo[msg.sender].stakedAmount > 0, "User doesn't have a plan");
         require(block.timestamp > addressToInfo[msg.sender].deadline, "Deadline hasn't been achieved");
 
         // Reqeust CO2 data from API
-        requestId = apiConsumer.requestLatestC02Data(_vehicleRegistration);
+        bytes32 requestId = apiConsumer.requestLatestC02Data(_vehicleRegistration);
+
+        // Save request ID to users address in mapping
+        addressToRequestID[requestId] = msg.sender;
 
         uint stakedAmount = userGoals[target].stakedAmount;
         uint shares = userGoals[target].shares;
@@ -106,7 +115,6 @@ contract Staking is Ownable{
     }
 
     function fufillData(uint256 _C02, bytes32 _requestId) external onlyAPIConsumer(){
-
 
     }
 }
