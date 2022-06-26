@@ -22,13 +22,13 @@ contract APIConsumer is ChainlinkClient {
         oracle = _oracle;
         jobId = _jobId;
         fee = _fee;
-        staking = _staking
+        staking = _staking;
     }
 
     /**
      * Create a Chainlink request to retrieve API response, find the target
      */
-    function requestLatestC02Data() public returns (bytes32 requestId) 
+    function requestLatestC02Data(string memory _vehicleRegistration) public returns (bytes32 requestId) 
     {
         Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         

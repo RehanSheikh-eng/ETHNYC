@@ -14,7 +14,7 @@ NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["hardhat", "development", "ganache",
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS + [
     "mainnet-fork",
     "binance-fork",
-    "matic-fork",
+    "dai-fork",
 ]
 
 contract_to_mock = {
@@ -96,7 +96,7 @@ def get_verify_status():
     return verify
 
 
-def deploy_mocks(decimals=18, initial_value=2000):
+def deploy_mocks():
     """
     Use this script if you want to deploy mocks to a testnet
     """
@@ -105,17 +105,6 @@ def deploy_mocks(decimals=18, initial_value=2000):
     account = get_account()
     print("Deploying Mock Link Token...")
     link_token = LinkToken.deploy({"from": account})
-    print("Deploying Mock Price Feed...")
-    mock_price_feed = MockV3Aggregator.deploy(
-        decimals, initial_value, {"from": account}
-    )
-    print(f"Deployed to {mock_price_feed.address}")
-    print("Deploying Mock VRFCoordinator...")
-    mock_vrf_coordinator = VRFCoordinatorMock.deploy(
-        link_token.address, {"from": account}
-    )
-    print(f"Deployed to {mock_vrf_coordinator.address}")
-
     print("Deploying Mock Oracle...")
     mock_oracle = MockOracle.deploy(link_token.address, {"from": account})
     print(f"Deployed to {mock_oracle.address}")
