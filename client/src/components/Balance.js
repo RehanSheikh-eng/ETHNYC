@@ -29,9 +29,8 @@ const useStyles = makeStyles({
 export default function Balance(){
 
     const [loader, setLoader] = useState(false);
-    const [ethbalance, setEthBalance] = useState(0);
-    const [usdbalance, setUsdBalance] = useState(0);
-    const [lottery, setLottery] = useState();
+    const [daibalance, setDaiBalance] = useState(0);
+    const [staking, setStaking] = useState();
     const [drawTime, setDrawTime] = useState();
     const [lotteryId, setLotteryId] = useState(0);
     const [lotteryInfo, setLotteryInfo] = useState();
@@ -42,8 +41,8 @@ export default function Balance(){
 
     useEffect(async () => {
 
-        const lottery = await loadContract("42", "Lottery");
-        setLottery(lottery);
+        const staking = await loadContract("42", "Staking");
+        setStaking(staking);
 
         const ethbalance = await fetchCurrentBalance();
         setEthBalance(ethers.utils.formatEther(ethbalance));
