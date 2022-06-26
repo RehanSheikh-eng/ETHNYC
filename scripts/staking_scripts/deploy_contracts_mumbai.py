@@ -34,6 +34,10 @@ def deploy_staking_mumbai():
     )
     tx.wait(1)
 
+    fund_with_link(
+        api_consumer,
+        amount=config["networks"][network.show_active()]["fee"]
+    )
 
 def main():
     deploy_staking_mumbai()

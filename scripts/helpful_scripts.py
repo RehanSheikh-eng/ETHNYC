@@ -19,7 +19,7 @@ contract_to_mock = {
     "link_token": LinkToken,
     "oracle": MockOracle,
     "dai": interface.IERC20,
-    "aDai": interface.IERC20,
+    "aDai": interface.IAToken,
     "lendingPool": interface.ILendingPool,
 }
 

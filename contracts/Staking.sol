@@ -37,7 +37,7 @@ contract Staking is Ownable{
     }
 
     // Average C02
-    uint256 averageC02 = 1000;
+    uint256 averageC02 = 100000;
 
     // Mapping from user wallet address to submitted information
     mapping(address => userInformation) private addressToInfo;

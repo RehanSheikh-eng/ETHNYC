@@ -28,13 +28,14 @@ contract APIConsumer is ChainlinkClient {
     /**
      * Create a Chainlink request to retrieve API response, find the target
      */
-    function requestLatestC02Data(string memory _vehicleRegistration) public returns (bytes32 requestId) 
+    function requestLatestC02Data() public returns (bytes32 requestId) 
     {
         Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         
+        string url = "https://emissionsapi.herokuapp.com/?number_plate=KV65VHW";
         // Set the URL to perform the GET request on
-        request.add("get", "https://tranquil-falls-64056.herokuapp.com/cpi/peg_price/2018-01");
-
+        request.add("get", url);
+        request.add("path", "total CO2 emitted g/year");
         int timesAmount = 10**18;
 
         request.addInt("times", timesAmount);
