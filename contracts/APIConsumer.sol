@@ -32,9 +32,8 @@ contract APIConsumer is ChainlinkClient {
     {
         Chainlink.Request memory request = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
         
-        string url = "https://emissionsapi.herokuapp.com/?number_plate=KV65VHW";
         // Set the URL to perform the GET request on
-        request.add("get", url);
+        request.add("get", "https://emissionsapi.herokuapp.com/?number_plate=KV65VHW");
         request.add("path", "total CO2 emitted g/year");
         int timesAmount = 10**18;
 

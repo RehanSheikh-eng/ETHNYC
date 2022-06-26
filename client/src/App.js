@@ -1,8 +1,6 @@
 import React from "react"
 import './App.css'
-import Balance from "./components/Balance"
 import LotteryAppBar from "./components/LotteryAppBar"
-import LotteryHub from "./components/LotteryHub"
 export default function App() {
 
     return(
@@ -17,14 +15,14 @@ export default function App() {
                             <h2> Get Your Tickets Now!</h2>
                         </div>
                         <div>
-                            <Balance></Balance>
+                        
                         </div>
                     </div>
                 </div>
             </div>
             <div>
                 <div className="lottery-hub-main-page">
-                    <LotteryHub></LotteryHub>
+                    
                 </div>
             </div>
         </div>

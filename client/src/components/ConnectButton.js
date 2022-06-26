@@ -7,6 +7,7 @@ import {
   getCurrentWalletConnected,
 } from "../utils/interact";
 
+
 const useStyles = makeStyles({
   root: {
     padding: "7px 16px",
@@ -22,6 +23,7 @@ const useStyles = makeStyles({
   }
 
 });
+
 
 const ConnectButton = () => {
   //state variables

@@ -67,7 +67,7 @@ networks:
     # Change to True if you have an Etherscan API key and want to verify
     verify: False
     update_interval: 60
-  mumbai:
+  id=mumbai:
     link_token: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB'
     dai: '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F'
     aDai: '0x639cB7b21ee2161DF9c882483C9D55c90c20Ca3e'

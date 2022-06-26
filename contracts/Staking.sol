@@ -48,6 +48,8 @@ contract Staking is Ownable{
     // Keeps track of previous C02 data
     mapping(address => uint256) private addressToC02;
 
+    event fundsStaked(uint amount);
+
     modifier onlyAPIConsumer(){
 
         require(
@@ -96,6 +98,8 @@ contract Staking is Ownable{
 
         // Incerement pool amount
         communityPool += _amount;
+
+        emit fundsStaked(aShare);
     }
 
     function initWithdraw(string memory _vehicleRegistration) public {

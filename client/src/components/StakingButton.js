@@ -54,111 +54,77 @@ export default function EnterButtonV2() {
     const [state, setState] = useState({});
 
     const classes = useStyles();
-    const [lottery, setLottery] = useState();
+
+
+    const [contract, setContract] = useState();
     const [provider, setProvider] = useState();
-    const [lotterySize, setLotterySize] = useState();
-    const [lotteryId, setLotteryId] = useState();
-    const [lotteryInfo, setLotteryInfo] = useState();
-    const [numberOptions, setNumberOptions] = useState([]);
+
+    const [totalStakeBalance, setTotalStakeBalance] = useState();
+    const [stakeAmount, setStakeAmount] = useState();
 
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState();
 
+
     useEffect(async () => {
 
-        const lottery = await loadContract("42", "Lottery");
-        setLottery(lottery);
+        const contract = await loadContract("80001", "Staking");
+        setContract(contract);
 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         setProvider(provider);
 
-        const lotterySize = await lottery.sizeOfLottery();
-        setLotterySize(lotterySize.toNumber());
-
-        const stateobj = {};
-        for (let i = 0; i < lotterySize.toNumber(); i++) {
-            const nameId = `num${i+1}`;
-            stateobj[nameId] = "0";
-        };
-        setState(stateobj);
-
-        const maxValidNumber = await lottery.maxValidNumber();
-        setMaxValidNumber(maxValidNumber.toNumber());
-        
-        const lotteryId = await lottery.lottoId();
-        setLotteryId(lotteryId);
-        console.log(`Lottery ID: ${lotteryId}`);
-
-        const lotteryInfo = await lottery.getLotteryInfo(lotteryId);
-        console.log(lotteryInfo);
-        setLotteryInfo(lotteryInfo);
-
-        if (lotteryInfo[2] === 1){
-            console.log("setting disabled false");
-            setDisabled(false);
-        } else {
-            console.log("setting disabled true");
-            setDisabled(true);
-        }
+        const totalStakeBalance = await contract.communityPool();
+        setTotalStakeBalance(totalStakeBalance.toNumber());
 
         addLotteryContractListner();
 
     }, []);
 
-    const handleChange = e => {
-        const value = e.target.value;
-        console.log(value);
-        console.log(typeof value);
-        console.log(e.target.name);
-        console.log(typeof e.target.name);
-        setState({
-        ...state,
-        [e.target.name]: value,
-        });
-    };
-
-    const handleBuyTicket = async () => {
+    const handleStaking = async () => {
         const { address, status } = await getCurrentWalletConnected();
         console.log(address);
         const signer = provider.getSigner();
-        const lottery_rw = lottery.connect(signer);
+        const contract_rw = contract.connect(signer);
 
+        const numbers = Object.values(state);
         setLoading(true);
-        const tx = await lottery_rw.enter(numbers.map(x=>+x), {value: ethers.utils.parseEther("0.001")});
+        const tx = await contract_rw.stake(stakeAmount);
         setLoading(false);
-
-        const stateobj = {};
-        for (let i = 0; i < lotterySize; i++) {
-            const nameId = `num${i+1}`;
-            stateobj[nameId] = "0";
-        };
-
-        setState(stateobj);
-        Array.from(document.querySelectorAll("select")).forEach(
-            select => (select.value = "0")
-          );
-        
     };
 
 
     async function addLotteryContractListner(){
-        const lottery = await loadContract("42", "Lottery");
-        lottery.on("LotteryOpen", async (lotteryId, event) => {
-            console.log(event);
-            setDisabled(false);
-            setLotteryId(lotteryId);
-        })
-        lottery.on("LotteryClose", async (lotteryId, event) => {
-            console.log(event);
-            setDisabled(true);
+        const contract = await loadContract("42", "Staking");
+        contract.on("fundsStaked", async (amount, event) => {
+            const totalStakeBalance = await contract.communityPool();
+            setTotalStakeBalance(totalStakeBalance.toNumber());
         })
     }
 
     return(
         <div>
+            <div>
+                <div style={{
+                        textAlign: "center",
+                        marginBottom: "10px",
+                        fontSize: "20px"}}>
+                    <h2> 
+                        Your Ticket : 
+                    </h2>
+                </div>
+            </div>
+            <input
+                type="text"
+                pattern="[0-9]*"
+                value={stakeAmount}
+                onChange={(e) =>
+                setStakeAmount((v) => (e.target.validity.valid ? e.target.value : v))
+                }
+            />
             <div className="buy-button-container">
                 <Button 
-                    onClick={handleBuyTicket}
+                    onClick={handleStaking}
                     disabled={disabled}
                     classes={{
                         root: classes.root,

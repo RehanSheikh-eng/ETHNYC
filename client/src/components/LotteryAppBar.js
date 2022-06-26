@@ -1,5 +1,5 @@
 import React from "react";
-import ConnectButton from "./ConnectButton";
+import ConnectButtonV2 from "./ConnectButtonV2";
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -28,8 +28,8 @@ export default function LotteryAppBar() {
                 </Typography>
 
 
-                <ConnectButton>
-                </ConnectButton>
+                <ConnectButtonV2>
+                </ConnectButtonV2>
 
             </Toolbar>
         </AppBar>
