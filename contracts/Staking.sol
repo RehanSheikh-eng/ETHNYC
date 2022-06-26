@@ -76,7 +76,7 @@ contract Staking is Ownable{
     function stake(uint256 _amount) public {
 
         // Mandatory checks of input data
-        require(_amount >= 1, "Need to transfer at least 1");
+        require(_amount >= 0, "Need to transfer at least 0");
         require(addressToInfo[msg.sender].lentAmount == 0, "User already has set up a plan");
 
         // Transfer dai from the message sender to this contract

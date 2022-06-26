@@ -21,6 +21,7 @@ contract_to_mock = {
     "dai": interface.IERC20,
     "aDai": interface.IAToken,
     "lendingPool": interface.ILendingPool,
+    "uniswapDaiPool": interface.IUniswapV2ERC20,
 }
 
 

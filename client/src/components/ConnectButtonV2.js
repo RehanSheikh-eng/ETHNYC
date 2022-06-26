@@ -111,7 +111,6 @@ const ConnectButton = () => {
     return (
       <div className="App">
         <Button classes={{root: classes.root}} onClick={connectWallet}>Connect Wallet</Button>
-            <div>Connection Status: ${!!account}</div>
             <div>Wallet Address: ${account}</div>
             <div>      
                 <button onClick={disconnect}>Disconnect</button>

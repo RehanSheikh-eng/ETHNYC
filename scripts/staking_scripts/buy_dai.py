@@ -26,13 +26,14 @@ def buy_dai():
         }
     )
     dai = get_contract("dai")
-    print(dai.balance({"from": account}))
+    print(dai.balanceOf(account))
 
 def stake_dai():
     account = get_account()
     staking = Staking[-1]
     dai = get_contract("dai")
-    amount = dai.balance({"from": account})
+    amount = dai.balanceOf(account)
+    dai.approve(staking.address, amount, {"from": account})
     tx = staking.stake(amount, {"from": account})
 
 def main():

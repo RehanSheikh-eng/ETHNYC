@@ -1,6 +1,7 @@
 import React from "react"
 import './App.css'
 import LotteryAppBar from "./components/LotteryAppBar"
+import StakingButton from "./components/StakingButton"
 export default function App() {
 
     return(
@@ -12,10 +13,10 @@ export default function App() {
                 <div>
                     <div className="main_page">
                         <div className="call_to_action_text">
-                            <h2> Get Your Tickets Now!</h2>
+                            <h2> Save the World and Earn rewards!</h2>
                         </div>
                         <div>
-                        
+                        <StakingButton></StakingButton>
                         </div>
                     </div>
                 </div>

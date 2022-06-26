@@ -20,16 +20,16 @@ export default function LotteryAppBar() {
     const classes = useStyles()
 
     return(
-        <AppBar style={{ background: 'pink' }} position="flex">
+        <AppBar style={{ background: 'green' }} position="flex">
             <Toolbar>
 
                 <Typography variant="h6" align="center" className={classes.title} >
-                    KOHEI
+                <ConnectButtonV2>
+                </ConnectButtonV2>
                 </Typography>
 
 
-                <ConnectButtonV2>
-                </ConnectButtonV2>
+
 
             </Toolbar>
         </AppBar>

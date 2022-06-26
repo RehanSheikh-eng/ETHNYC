@@ -63,7 +63,6 @@ export default function EnterButtonV2() {
     const [stakeAmount, setStakeAmount] = useState();
 
     const [loading, setLoading] = useState(false);
-    const [disabled, setDisabled] = useState();
 
 
     useEffect(async () => {
@@ -74,10 +73,27 @@ export default function EnterButtonV2() {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         setProvider(provider);
 
-        const totalStakeBalance = await contract.communityPool();
-        setTotalStakeBalance(totalStakeBalance.toNumber());
 
-        addLotteryContractListner();
+        const chain = 'POLYGON';
+        const address = '0xABD132d82Ca6Eca3573D5671af12587cd74744D1';
+        const contractAddress = '0x639cB7b21ee2161DF9c882483C9D55c90c20Ca3e';
+        const resp = await fetch(
+        `https://api-eu1.tatum.io/v3/blockchain/token/balance/${chain}/${contractAddress}/${address}`,
+        {
+            method: 'GET',
+            headers: {
+            'x-testnet-type': 'polygon-mumbai',
+            'x-api-key': 'c06722f0-7db9-4bfc-8464-3c97d1954e50'
+            }
+        }
+        );
+
+        const data = await resp.text();
+
+        const totalStakeBalance = data.balance
+        setTotalStakeBalance(totalStakeBalance);
+
+        addContractListner();
 
     }, []);
 
@@ -94,13 +110,19 @@ export default function EnterButtonV2() {
     };
 
 
-    async function addLotteryContractListner(){
-        const contract = await loadContract("42", "Staking");
+    async function addContractListner(){
+        const contract = await loadContract("80001", "Staking");
         contract.on("fundsStaked", async (amount, event) => {
             const totalStakeBalance = await contract.communityPool();
             setTotalStakeBalance(totalStakeBalance.toNumber());
         })
     }
+
+    const handleChange = event => {
+        const result = event.target.value.replace(/\D/g, '');
+    
+        setStakeAmount(result);
+      };
 
     return(
         <div>
@@ -110,28 +132,28 @@ export default function EnterButtonV2() {
                         marginBottom: "10px",
                         fontSize: "20px"}}>
                     <h2> 
-                        Your Ticket : 
+                        Total Staked : 
+                    </h2>
+                    <h2>
+                        {totalStakeBalance}
                     </h2>
                 </div>
             </div>
             <input
                 type="text"
-                pattern="[0-9]*"
+                placeholder="Set your Stake!"
                 value={stakeAmount}
-                onChange={(e) =>
-                setStakeAmount((v) => (e.target.validity.valid ? e.target.value : v))
-                }
+                onChange={handleChange}
             />
             <div className="buy-button-container">
                 <Button 
                     onClick={handleStaking}
-                    disabled={disabled}
                     classes={{
                         root: classes.root,
                         disabled: classes.disabled,
                     }}
                 >
-                    BUY TICKET
+                    Stake Now!
                 </Button>
                 <div style={{marginLeft: 10}}>
                     {
