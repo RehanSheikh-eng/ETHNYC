@@ -4,9 +4,9 @@ pragma solidity >=0.7.0 <0.9.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "../interfaces/IAPIConsumer.sol";
-import "../interfaces/IWMaticGateway.sol";
-import "../interfaces/ILendingPool.sol";
+import "./interfaces/IAPIConsumer.sol";
+import "./interfaces/IWMaticGateway.sol";
+import "./interfaces/ILendingPool.sol";
 import "./Testable.sol";
 
 
@@ -57,11 +57,10 @@ contract Staking is Ownable{
         _;
     }
 
-    constructor(address _daiAddress, address _aDaiAddress, address _lendingPoolAddress, address _IAPIConsumer) {
+    constructor(address _daiAddress, address _aDaiAddress, address _lendingPoolAddress) {
         dai = ERC20(_daiAddress);
         aDai = ERC20(_aDaiAddress);
         lendingPool = ILendingPool(_lendingPoolAddress);
-        apiConsumer = IAPIConsumer(_IAPIConsumer);
     }
 
     function initialize(address _APIConsumer) public onlyOwner(){

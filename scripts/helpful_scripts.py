@@ -4,9 +4,7 @@ from brownie import (
     config,
     interface,
     LinkToken,
-    MockV3Aggregator,
     MockOracle,
-    VRFCoordinatorMock,
     Contract,
 )
 
@@ -19,9 +17,10 @@ LOCAL_BLOCKCHAIN_ENVIRONMENTS = NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS + [
 
 contract_to_mock = {
     "link_token": LinkToken,
-    "eth_usd_price_feed": MockV3Aggregator,
-    "vrf_coordinator": VRFCoordinatorMock,
     "oracle": MockOracle,
+    "dai": interface.IERC20,
+    "aDai": interface.IERC20,
+    "lendingPool": interface.ILendingPool,
 }
 
 

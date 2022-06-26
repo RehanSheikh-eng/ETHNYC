@@ -2,7 +2,7 @@
 pragma solidity ^0.8.1;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
-import "../interfaces/IStaking.sol";
+import "./interfaces/IStaking.sol";
 
 contract APIConsumer is ChainlinkClient {
     using Chainlink for Chainlink.Request;

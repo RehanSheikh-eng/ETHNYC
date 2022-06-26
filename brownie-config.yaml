@@ -28,6 +28,12 @@ networks:
     cmd_settings:
       mnemonic: hill law jazz limb penalty escape public dish stand bracket blue jar
     verify: False
+  mainnet-fork:
+    link_token: '0x514910771AF9Ca656af840dff83E8264EcF986CA'
+    dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+    aDai: '0x028171bCA77440897B824Ca71D1c56caC55b68A3'
+    lendingPool: '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9'
+    oracle: ''
   kovan:
     vrf_coordinator: '0xdD3782915140c8f3b190B5D67eAc6dc5760C46E9'
     link_token: '0xa36085F69e2889c224210F603D836748e7dC0088'
@@ -35,8 +41,6 @@ networks:
     fee: 100000000000000000
     oracle: '0x2f90A6D021db21e1B2A077c5a37B3C7E75D15b7e'
     jobId: '29fa9aa13bf1468788b7cc4a500a45b8'
-    eth_usd_price_feed: '0x9326BFA02ADD2366b30bacB125260Af641031331'
-    # Change to True if you have an Etherscan API key and want to verify
     verify: False
     update_interval: 60
   rinkeby:
@@ -60,11 +64,6 @@ networks:
     # Change to True if you have an Etherscan API key and want to verify
     verify: False
     update_interval: 60
-  fuji:
-    link_token: '0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846'
-    fee: 100000000000000000
-    oracle: '0xcc80934eaf22b2c8dbf7a69e8e0d356a7cac5754'
-    jobId: '5ca4fa9b2d64462290abfbda84e38cf4'
   mumbai:
     link_token: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB'
     dai: '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F'

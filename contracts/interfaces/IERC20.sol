@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: agpl-3.0
-pragma solidity 0.6.8;
+pragma solidity 0.6.12;
 
 /**
  * @dev Interface of the ERC20 standard as defined in the EIP.
@@ -78,3 +78,4 @@ interface IERC20 {
    */
   event Approval(address indexed owner, address indexed spender, uint256 value);
 }
+
